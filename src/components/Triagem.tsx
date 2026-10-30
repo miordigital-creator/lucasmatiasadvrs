@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { resumirCaso } from "@/lib/triagem.functions";
 
 const WHATS = "https://wa.me/5551992491957";
@@ -19,7 +18,7 @@ function Markdown({ text }: { text: string }) {
 }
 
 export function Triagem() {
-  const resumir = useServerFn(resumirCaso);
+  const resumir = resumirCaso;
   const [area, setArea] = useState<"trabalhista" | "previdenciario" | "nao-sei">("nao-sei");
   const [relato, setRelato] = useState("");
   const [loading, setLoading] = useState(false);
