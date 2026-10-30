@@ -33,7 +33,7 @@ Responda em Markdown com exatamente estas seções:
 Termine com: "Este resumo não é aconselhamento jurídico. A análise do seu caso será feita por um advogado no atendimento."`;
 
 export async function resumirRelato(relato: string) {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new Error("Serviço de IA não configurado.");
   const provider = createOpenAI({
     baseURL: "https://ai.gateway.lovable.dev/v1",
