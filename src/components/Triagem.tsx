@@ -2,6 +2,21 @@ import { useState } from "react";
 import { resumirCaso } from "@/lib/triagem.functions";
 
 const WHATS = "https://wa.me/5551992491957";
+const AREA_TXT = { trabalhista: "Trabalhista", previdenciario: "Previdenciário", outros: "Outros" } as const;
+
+function mensagemWhats(area: keyof typeof AREA_TXT, resumo: string) {
+  const limpo = resumo
+    .replace(/^### (.+)$/gm, "*$1*")
+    .replace(/\*\*(.+?)\*\*/g, "*$1*")
+    .replace(/^\s*[-*] /gm, "• ")
+    .split("\n")
+    .filter((l) => !/aconselhamento jurídico|^\*Como falar|WhatsApp: \+55|Atendimento presencial:/i.test(l))
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  const txt = `Olá! Vim pelo site e gostaria de agendar um atendimento.\n\n*Assunto:* ${AREA_TXT[area]}\n\n${limpo}`;
+  return `${WHATS}?text=${encodeURIComponent(txt.slice(0, 3500))}`;
+}
 
 function Markdown({ text }: { text: string }) {
   return (
@@ -19,7 +34,7 @@ function Markdown({ text }: { text: string }) {
 
 export function Triagem() {
   const resumir = resumirCaso;
-  const [area, setArea] = useState<"trabalhista" | "previdenciario" | "nao-sei">("nao-sei");
+  const [area, setArea] = useState<"trabalhista" | "previdenciario" | "outros">("outros");
   const [relato, setRelato] = useState("");
   const [loading, setLoading] = useState(false);
   const [resumo, setResumo] = useState("");
@@ -48,7 +63,7 @@ export function Triagem() {
         <fieldset>
           <legend className="mb-2 text-sm font-semibold">Seu assunto é</legend>
           <div className="flex flex-wrap gap-2">
-            {([["trabalhista", "Trabalhista"], ["previdenciario", "Previdenciário"], ["nao-sei", "Não sei"]] as const).map(([v, l]) => (
+            {([["trabalhista", "Trabalhista"], ["previdenciario", "Previdenciário"], ["outros", "Outros"]] as const).map(([v, l]) => (
               <label key={v} className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition ${area === v ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}>
                 <input type="radio" name="area" value={v} checked={area === v} onChange={() => setArea(v)} className="sr-only" />
                 {l}
@@ -75,7 +90,11 @@ export function Triagem() {
         {resumo && (
           <>
             <Markdown text={resumo} />
-            <a href={WHATS} target="_blank" rel="noopener noreferrer" className="mt-6 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground">Falar no WhatsApp</a>
+            <div className="mt-6 rounded-xl border border-gold/50 bg-card p-4">
+              <p className="text-sm font-semibold">Confira o resumo acima. Se estiver correto, envie para o escritório:</p>
+              <a href={mensagemWhats(area, resumo)} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex rounded-full bg-whatsapp px-6 py-3 font-semibold text-whatsapp-foreground">Enviar resumo pelo WhatsApp</a>
+              <p className="mt-2 text-xs text-muted-foreground">O WhatsApp abrirá com a mensagem pronta. É só tocar em enviar.</p>
+            </div>
           </>
         )}
       </div>

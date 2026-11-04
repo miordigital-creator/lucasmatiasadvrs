@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const schema = z.object({
-  area: z.enum(["trabalhista", "previdenciario", "nao-sei"]),
+  area: z.enum(["trabalhista", "previdenciario", "outros"]),
   relato: z.string().trim().min(30, "Descreva com pelo menos 30 caracteres.").max(3000),
 });
 
@@ -10,7 +10,7 @@ export const resumirCaso = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => schema.parse(input))
   .handler(async ({ data }) => {
     const { resumirRelato } = await import("./triagem.server");
-    const areaTxt = { trabalhista: "Trabalhista", previdenciario: "Previdenciário", "nao-sei": "Não sei" }[data.area];
+    const areaTxt = { trabalhista: "Trabalhista", previdenciario: "Previdenciário", outros: "Outros" }[data.area];
     try {
       return { ok: true as const, resumo: await resumirRelato(`Área indicada pela pessoa: ${areaTxt}\n\nRelato:\n${data.relato}`) };
     } catch (e) {
