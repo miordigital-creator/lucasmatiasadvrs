@@ -61,7 +61,7 @@ const faq = [
 function Index() {
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-navy-foreground/10 bg-navy/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-navy-foreground/10 bg-navy">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <a href="#inicio" aria-label="Lucas Matias Advocacia, início">
             <img src={logo.url} alt="Matias Advocacia" width={600} height={189} className="h-10 w-auto md:h-12" />
