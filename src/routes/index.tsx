@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Triagem } from "@/components/Triagem";
-import logo from "@/assets/logo.webp.asset.json";
+const logo = { url: "/matias-advocacia-logo.webp" };
 
 const TITLE = "Lucas Matias Advocacia | Advogado Trabalhista e Previdenciário em Porto Alegre";
 const DESC = "Orientação jurídica em Direito do Trabalho e Previdenciário, com atendimento presencial em Porto Alegre e online. Conheça o escritório Lucas Matias Advocacia.";
